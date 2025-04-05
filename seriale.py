@@ -1,15 +1,20 @@
-import serial
-ser = serial.Serial('/dev/ttyACM2')  # open serial port
-stampa = "print(qulo)"
-qulo = "qulo = 1"
-ser.write(qulo.encode("utf-8"))         # check which port was really used
-ser.write(stampa.encode("utf-8"))
+import spremote
+from time import sleep
 
-while True:
-    i = 0
-    gay = []
-    while i < 100:
-        gay.append(ser.read().decode("utf-8"))    # write a string
-        i += 1
-    print(gay)
-ser.close()    
+
+
+print('Press left button to reduce speed, right button to increase speed, ' + \
+      'both buttons to stop the program.')
+
+hub = spremote.Hub('/dev/ttyACM1')
+lb = spremote.Button(hub, 'LEFT')
+rb = spremote.Button(hub, 'RIGHT')
+m = spremote.MotorPair(hub, 'A','B')
+
+
+
+m.start(30)
+sleep(10)
+m.stop()
+
+hub.disconnect()
