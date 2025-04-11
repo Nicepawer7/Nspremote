@@ -1,9 +1,8 @@
-from . import logger
 
 class MotionSensor:
     ''' Motion sensor integrated into a hub block. '''
         
-    def __init__(self, hub, up='BUTTONS'):
+    def __init__(self, hub):
         '''
         Prepare hub for using the motion sensor.
     
@@ -14,38 +13,13 @@ class MotionSensor:
         
         self.hub = hub
         self.hub.cmd('from hub import motion_sensor')
-        self.reset(up)
+        self.reset()
         
     
-    def reset(self, up='BUTTONS'):
-        '''
-        Tell the motion sensor which side of the hub block faces upwards and
-        that current yaw angle is zero. Yaw, pitch, role angles returned by
-        [](#get_orientation) will be relative to these settings.
-        
-        :param str up: Side of hub block to be considered facing upwards. One of
-                       `'BUTTONS'`, `'BATTERY'`, `'USB'`, `'SPEAKER'`, `'ACE'`,
-                       `'BDF'`, each referring to one side of the hub block.
-        '''
-        
-        up_dict = {
-            'BUTTONS': 'TOP',
-            'USB': 'BACK',
-            'ACE': 'LEFT',
-            'BDF': 'RIGHT',
-            'SPEAKER': 'FRONT',
-            'BATTERY': 'BOTTOM'
-        }
-        ret = self.hub.cmd(f'motion_sensor.set_yaw_face(motion_sensor.{up_dict[up]})')
-        logger.debug(
-            f'motion_sensor.set_yaw_face in MotionSensor.reset returned {ret}'
-        )
-        ret = self.hub.cmd(f'motion_sensor.reset_yaw(0)')
-        logger.debug(
-            f'motion_sensor.reset_yaw in MotionSensor.reset returned {ret}'
-        )
-        
-        
+    def reset(self):
+
+        self.hub.cmd(f'PrimeHub().motion_sensor.reset_yaw_angle()')
+            
     def get_orientation(self):
         '''
         Read yaw, pitch and role angles of hub block in 3d space.
@@ -92,9 +66,7 @@ class MotionSensor:
         '''
         
         ret = self.hub.cmd(f'motion_sensor.tilt_angles()')
-        logger.debug(
-            f'motion_sensor.tilt_angles in MotionSensor.orientation returned {ret}'
-        )
+
         
         return tuple(int(x) / 10 for x in ret[-1][1:-1].split(','))
 
@@ -111,11 +83,7 @@ class MotionSensor:
                                        r, p, y in degrees per second.
         '''
         
-        ret = self.hub.cmd(f'motion_sensor.angular_velocity(True)')
-        logger.debug(
-            f'motion_sensor.angular_velocity in MotionSensor.get_angular_velocity returned {ret}'
-        )
-        
+        ret = self.hub.cmd(f'motion_sensor.angular_velocity(True)')       
         return tuple(int(x) / 10 for x in ret[-1][1:-1].split(','))
 
 
@@ -133,10 +101,19 @@ class MotionSensor:
                                        gravitation.
         '''
         
-        ret = self.hub.cmd(f'motion_sensor.acceleration(True)')
-        logger.debug(
-            f'motion_sensor.acceleration in MotionSensor.get_acceleration returned {ret}'
-        )
-        
+        ret = self.hub.cmd(f'motion_sensor.acceleration(True)')        
         return tuple(int(x) / 1000 for x in ret[-1][1:-1].split(','))
+    
+    def get_yaw(self):
+        ret = self.hub.cmd(f'PrimeHub().motion_sensor.get_yaw_angle()')
+        return ret
+    
+    def get_pitch(self):
+        ret = self.hub.cmd(f'PrimeHub().motion_sensor.get_pitch_angle()')
+        return ret
+    
+    def get_yaw(self):
+      ret = self.hub.cmd(f'PrimeHub().motion_sensor.get_roll_angle()')
+      return ret
+        
 
