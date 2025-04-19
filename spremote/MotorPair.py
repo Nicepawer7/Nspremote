@@ -143,4 +143,16 @@ class MotorPair:
         ret = self.hub.cmd(f'motor.absolute_position({self.port1})')
 
         return int(ret[-1])
-    
+    def turn_on_spot(self,direzione,speed=70):
+        
+        match direzione:
+            case 1:
+                self.hub.cmd(f'coppia.start_tank_at_power({speed*-1},{speed})')
+            case "sinistra":
+                self.hub.cmd(f'coppia.start_tank_at_power({speed*-1},{speed})')
+            case -1:
+                self.hub.cmd(f'coppia.start_tank_at_power({speed},{speed*-1})')
+            case "destra":
+                self.hub.cmd(f'coppia.start_tank_at_power({speed},{speed*-1})')
+        
+   

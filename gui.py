@@ -17,10 +17,8 @@ def avanti(event):
     pair.start(speed)
 def indietro(event):
     pair.start(-speed)
-def gira_Sinistro(event):
-    spremote.Motor(hub).start("'B'",speed=70)
-def gira_Destro(event):
-    spremote.Motor(hub).start("'A'",speed=70)
+def gira_motore(porta,direzione = 1):
+    spremote.Motor(hub).start(porta,speed=70,direzione=direzione)
 def stop_pair(event):
     pair.stop()
 def stop_motor(porta):
@@ -42,8 +40,8 @@ backward.bind('<ButtonPress-1>',indietro)
 backward.bind('<ButtonRelease-1>',stop_pair)
 forward.bind('<ButtonPress-1>',avanti)
 forward.bind('<ButtonRelease-1>',stop_pair)
-sinistro.bind('<ButtonPress-1>',gira_Sinistro)
+sinistro.bind('<ButtonPress-1>',gira_motore)
 sinistro.bind('<ButtonRelease-1>',lambda event: stop_motor("'B'"))
-destro.bind('<ButtonPress-1>',gira_Destro)
+destro.bind('<ButtonPress-1>',gira_motore)
 destro.bind('<ButtonRelease-1>',lambda event:stop_motor("'A'"))
 root.mainloop()

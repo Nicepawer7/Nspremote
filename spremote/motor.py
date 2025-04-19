@@ -28,7 +28,7 @@ class Motor:
         # stop and (un)lock motor
  
 
-    def start(self,porta,speed = 50):
+    def start(self,porta,speed = 50,direzione = 1):
         '''
         Start the motor.
         
@@ -38,11 +38,10 @@ class Motor:
                           `None`, default acceleration is used.
         '''
         
+        if direzione == -1:
+            speed = speed * -1
 
-        if porta == "'A'":
-            self.hub.cmd(f'Motor({porta}).start({-speed})')
-        elif porta == "'B'":
-            self.hub.cmd(f'Motor({porta}).start({speed})')
+        self.hub.cmd(f'Motor({porta}).start({speed})')
 
 
         

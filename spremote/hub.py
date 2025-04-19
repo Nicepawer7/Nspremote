@@ -32,6 +32,7 @@ class Hub:
         # prepare for device listing
         self.cmd('import device')
         self.cmd('from spike import PrimeHub')
+        self.cmd('spike = PrimeHub()')
         
 
     def disconnect(self):
