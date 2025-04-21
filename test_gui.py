@@ -29,7 +29,7 @@ class MainApplication():
         telemetry.start()
         self.root.mainloop()
         self.stop = True
-        controll.Input.disconnect()
+        self.pad.disconnect()
 
     def create_widget(self): #create widget
         #movement buttons
@@ -171,30 +171,33 @@ class MainApplication():
                 self.port_f_label.config(text=F_value)
             self.speed_print.config(text=self.movement_speed)
     def controller(self):
-        print("THREAD STARTED")
-        pad = controll.Input()
+        self.pad = controll.Input()
         l_running = False
         r_running = False
-        while not self.stop:
-            l_speed = pad.left_speed()
-            print(l_speed)
-            r_speed = pad.right_speed()
-            if l_speed > 20:
-                self.binding.gira_motore('A',velocità=l_speed)
-                l_running = True
-            elif l_running == True and l_speed < 20:
-                self.binding.stop_motor('A')
-                l_running = False
-            if r_speed > 20:
-                self.binding.gira_motore('B',velocità=r_speed)
-                r_running = True
-            elif r_running == True and r_speed < 20:
-                self.binding.stop_motor('B')
-                print("Motore fermato")
-                r_running = False
-            self.speed_print.configure(text=max(l_speed,r_speed))
-            self.movement_speed_scale.set(max(r_speed,l_speed))
-            sleep(0.1)
+        while True:
+            sleep(10)
+            while not self.stop and self.pad.g.available():
+                speed = self.pad.input_speed()
+                if speed["l2"] > 20:
+                    self.binding.gira_motore('A',velocità=speed["l2"])
+                    l_running = True
+                elif l_running == True and speed["l2"] < 20:
+                    self.binding.stop_motor('A')
+                    l_running = False
+                if speed["r2"] > 20:
+                    self.binding.gira_motore('B',velocità=speed["r2"])
+                    r_running = True
+                elif r_running == True and speed["r2"] < 20:
+                    self.binding.stop_motor('B')
+                    print("Motore fermato")
+                    r_running = False
+                pressed = self.pad.is_pressed()
+                print(pressed["cross"])
+                self.speed_print.configure(text=max(speed["l2"],speed["r2"]))
+                self.movement_speed_scale.set(max(speed["l2"],speed["r2"]))
+                sleep(0.1)
+
+            print("Controller not found,waiting")
 
 class Binding():
     def avanti(self,event):

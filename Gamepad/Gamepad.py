@@ -60,6 +60,7 @@ class Gamepad:
         self.joystickNumber = str(joystickNumber)
         self.joystickPath = '/dev/input/js' + self.joystickNumber
         retryCount = 5
+        self.connected = True
         while True:
             try:
                 self.joystickFile = open(self.joystickPath, 'rb')
@@ -69,7 +70,9 @@ class Gamepad:
                 if retryCount > 0:
                     time.sleep(0.5)
                 else:
-                    raise IOError('Could not open gamepad %s: %s' % (self.joystickNumber, str(e)))
+                    print('Could not open gamepad %s: %s' % (self.joystickNumber, str(e)))
+                    self.connected = False
+                    return
         self.eventSize = struct.calcsize('IhBB')
         self.pressedMap = {}
         self.wasPressedMap = {}
@@ -81,7 +84,6 @@ class Gamepad:
         self.axisIndex = {}
         self.lastTimestamp = 0
         self.updateThread = None
-        self.connected = True
         self.pressedEventMap = {}
         self.releasedEventMap = {}
         self.changedEventMap = {}
@@ -117,7 +119,7 @@ class Gamepad:
             else:
                 return struct.unpack('IhBB', rawEvent)
         else:
-            raise IOError('Gamepad has been disconnected')
+            print('Gamepad is not (anymore) connected')
 
     def _rawEventToDescription(self, event):
         """Decodes the raw event from getNextEventRaw into a formatted string."""
