@@ -68,9 +68,9 @@ class MainApplication():
         self.speed_text = tk.Label(self.root,text="Velocità di movimento:")
         self.speed_print = tk.Label(self.root,text=0)
         #speeds scales
-        self.movement_speed_scale = ttk.Scale(self.root,from_=0,to=100,length=250,)
-        self.velocità_braccio_sinistro = ttk.Scale(self.root,from_=100,to=0,length=200,orient=tk.VERTICAL)
-        self.velocità_braccio_destro = ttk.Scale(self.root,from_=100,to=0,length=200,orient=tk.VERTICAL)
+        self.movement_speed_scale = ttk.Scale(self.root,from_=0,to=100,length=250,value=50)
+        self.velocità_braccio_sinistro = ttk.Scale(self.root,from_=100,to=0,length=200,orient=tk.VERTICAL,value=50)
+        self.velocità_braccio_destro = ttk.Scale(self.root,from_=100,to=0,length=200,orient=tk.VERTICAL,value=50)
 
     def place_widget(self): # place widget
         #movement buttons
@@ -174,10 +174,17 @@ class MainApplication():
         self.pad = controll.Input()
         l_running = False
         r_running = False
+        c_arm = 50
+        d_arm = 50
+        c_turning = False
+        d_turning = False
+        c_direction = 1
+        d_direction = 1
         while True:
             sleep(10)
             while not self.stop and self.pad.g.available():
                 speed = self.pad.input_speed()
+                pressed = self.pad.is_pressed()
                 if speed["l2"] > 20:
                     self.binding.gira_motore('A',velocità=speed["l2"])
                     l_running = True
@@ -191,11 +198,53 @@ class MainApplication():
                     self.binding.stop_motor('B')
                     print("Motore fermato")
                     r_running = False
-                pressed = self.pad.is_pressed()
-                print(pressed["cross"])
                 self.speed_print.configure(text=max(speed["l2"],speed["r2"]))
                 self.movement_speed_scale.set(max(speed["l2"],speed["r2"]))
+                #high or low arm d speed
+                if 0 <= d_arm <= 100:
+                    if pressed["circle"] and d_arm < 100:
+                        d_arm += 10
+                    elif pressed["cross"] and d_arm > 0:
+                        d_arm -= 10
+                    self.velocità_braccio_destro.set(d_arm)
+                    if d_turning:
+                        self.binding.gira_motore('D',direzione=c_direction,velocità=d_arm)
+                        sleep(0.20)
+                # c arm speed
+                if 0 <= c_arm <= 100:                  
+                    if pressed["triangle"] and c_arm < 100:
+                        c_arm += 10
+                    elif pressed["square"] and c_arm > 0:
+                        c_arm -= 10
+                    self.velocità_braccio_sinistro.set(c_arm)
+                    if c_turning:
+                        self.binding.gira_motore('C',direzione=d_direction,velocità=c_arm)
+                        sleep(0.20)
+                # check fors tick movement to move arm
+                if speed["l3y"] > 30 and not c_turning:
+                    self.binding.gira_motore('C',direzione=1,velocità=c_arm)
+                    c_direction = 1
+                    c_turning = True
+                elif speed["l3y"] < -30 and not c_turning:
+                    self.binding.gira_motore('C',direzione=-1,velocità=c_arm)
+                    c_direction = -1
+                    c_turning = True
+                elif 30 > speed["l3y"] > -30 and c_turning:
+                    self.binding.stop_motor('C')
+                    c_turning = False
+                if speed["r3y"] > 30 and not d_turning:
+                    self.binding.gira_motore('D',direzione=1,velocità=d_arm)
+                    d_direction = 1
+                    d_turning = True
+                elif speed["r3y"] < -30 and not d_turning:
+                    self.binding.gira_motore('D',direzione=-1,velocità=d_arm)
+                    d_direction = -1
+                    d_turning = True
+                elif 30 > speed["r3y"] > -30 and d_turning:
+                    self.binding.stop_motor('D')
+                    d_turning = False
                 sleep(0.1)
+
 
             print("Controller not found,waiting")
 

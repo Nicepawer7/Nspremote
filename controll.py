@@ -38,20 +38,20 @@ class Input:
             return 0
     def input_speed(self):
         pressed = {
-            "r2":self.right_speed(),
-            "l2":self.left_speed(),
-            "r3y":(self.gamepad.axis('RIGHT-Y'))*100,
-            "l3y":(self.gamepad.axis('LEFT-Y'))*100
+            'r2':self.right_speed(),
+            'l2':self.left_speed(),
+            'r3y':-(self.gamepad.axis('RIGHT-Y'))*100,
+            'l3y':-(self.gamepad.axis('LEFT-Y'))*100
         }
         return pressed
     def is_pressed(self):
         pressed = {
-        "cross":self.gamepad.isPressed('CROSS'),
-        "circle":self.gamepad.isPressed('CIRCLE'),
-        "square":self.gamepad.isPressed('SQUARE'),
-        "triangle":self.gamepad.isPressed('TRIANGLE'),
-        "l1":self.gamepad.isPressed('L1'),
-        "r1":self.gamepad.isPressed('R1'),
+        'cross':self.gamepad.beenPressed('CROSS'),
+        'circle':self.gamepad.beenPressed('CIRCLE'),
+        'square':self.gamepad.beenPressed('SQUARE'),
+        'triangle':self.gamepad.beenPressed('TRIANGLE'),
+        'l1':self.gamepad.isPressed('L1'),
+        'r1':self.gamepad.isPressed('R1'),
         }
         return pressed
     def disconnect(self):
