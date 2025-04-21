@@ -1,7 +1,3 @@
-import logging
-
-logger = logging.getLogger(__name__)
-
 from .button import Button
 from .color_sensor import ColorSensor
 from .distance_sensor import DistanceSensor
