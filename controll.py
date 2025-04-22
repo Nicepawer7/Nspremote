@@ -2,10 +2,8 @@
 import Gamepad.Gamepad
 from time import sleep
 
-
-
 class Input:
-    def __init__(self):
+    def __init__(self,controller):
         self.g = Gamepad.Gamepad
         print('Waiting for gamepad')
         i = 0
@@ -15,7 +13,21 @@ class Input:
             print(i)
         if self.g.available():
             print("Gamepad connesso")
-            gamepadType = self.g.PS4
+            if controller == "PS3":
+                gamepadType = self.g.PS3
+            elif controller == "PS4":
+                gamepadType = self.g.PS4
+            elif controller == "Xbox360":
+                gamepadType = self.g.Xbox360
+            elif controller == "XboxONE":
+                gamepadType = self.g.XboxONE
+            elif controller == "Steam":
+                gamepadType = self.g.Steam
+            elif controller == "MMP1251":
+                gamepadType = self.g.MMP1251
+
+            elif controller == "PG9099":
+                gamepadType = self.g.PG9099
             self.gamepad = gamepadType()
             self.gamepad.startBackgroundUpdates()
             pass
