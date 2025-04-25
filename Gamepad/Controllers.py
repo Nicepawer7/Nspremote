@@ -1,4 +1,4 @@
-# coding: utf-8
+
 """
 Standard gamepad mappings.
 
@@ -39,56 +39,6 @@ class PS3(Gamepad):
             16: 'DPAD-RIGHT'
         }
         self._setupReverseMaps()
-
-
-# PS3 controller settings for older Raspbian versions
-#class PS3(Gamepad):
-#    fullName = 'PlayStation 3 controller'
-#
-#    def __init__(self, joystickNumber = 0):
-#        Gamepad.__init__(self, joystickNumber)
-#        self.axisNames = {
-#            0:  'LEFT-X',
-#            1:  'LEFT-Y',
-#            2:  'RIGHT-X',
-#            3:  'RIGHT-Y',
-#            4:  'roll-1',
-#            5:  'pitch',
-#            6:  'roll-2',
-#            8:  'DPAD-UP',
-#            9:  'DPAD-RIGHT',
-#            10: 'DPAD-DOWN',
-#            11: 'DPAD-LEFT',
-#            12: 'L2',
-#            13: 'R2',
-#            14: 'L1',
-#            15: 'R1',
-#            16: 'TRIANGLE',
-#            17: 'CIRCLE',
-#            18: 'CROSS',
-#            19: 'SQUARE'
-#        }
-#        self.buttonNames = {
-#            0:  'SELECT',
-#            1:  'L3',
-#            2:  'R3',
-#            3:  'START',
-#            4:  'DPAD-UP',
-#            5:  'DPAD-RIGHT',
-#            6:  'DPAD-DOWN',
-#            7:  'DPAD-LEFT',
-#            8:  'L2',
-#            9:  'R2',
-#            10: 'L1',
-#            11: 'R1',
-#            12: 'TRIANGLE',
-#            13: 'CIRCLE',
-#            14: 'CROSS',
-#            15: 'SQUARE',
-#            16: 'PS'
-#        }
-#        self._setupReverseMaps()
-
 
 class PS4(Gamepad):
     fullName = 'PlayStation 4 controller'
@@ -166,18 +116,18 @@ class Xbox360(Gamepad):
         self.axisNames = {
             0: 'LEFT-X',
             1: 'LEFT-Y',
-            2: 'LT',
+            2: 'L2',
             3: 'RIGHT-X',
             4: 'RIGHT-Y',
-            5: 'RT'
+            5: 'R2'
         }
         self.buttonNames = {
-            0:  'A',
-            1:  'B',
-            2:  'X',
-            3:  'Y',
-            4:  'LB',
-            5:  'RB',
+            0:  'CROSS',
+            1:  'CIRCLE',
+            2:  'SQUARE',
+            3:  'TRIANGLE',
+            4:  'L1',
+            5:  'R1',
             6:  'BACK',
             7:  'START',
             8:  'XBOX',
@@ -193,21 +143,21 @@ class XboxONE(Gamepad):
         Gamepad.__init__(self, joystickNumber)
         self.axisNames = {
             0: 'LAS -X', #Left Analog Stick Left/Right
-            1: 'LAS -Y', #Left Analog Stick Up/Down
+            1: 'LEFT-Y', #Left Analog Stick Up/Down
             2: 'RAS -X', #Right Analog Stick Left/Right
-            3: 'RAS -Y', #Right Analog Stick Up/Down
-            4: 'RT', #Right Trigger
-            5: 'LT', #Left Trigger
+            3: 'RIGHT-Y', #Right Analog Stick Up/Down
+            4: 'R2', #Right Trigger
+            5: 'L2', #Left Trigger
             6: 'DPAD -X', #D-Pad Left/Right
             7: 'DPAD -Y' #D-Pad Up/Down
         }
         self.buttonNames = {
-            0:  'A', #A Button
-            1:  'B', #B Button
-            3:  'X', #X Button
-            4:  'Y', #Y Button
-            6:  'LB', #Left Bumper
-            7:  'RB', #Right Bumper
+            0:  'CROSS', #A Button
+            1:  'CIRCLE', #B Button
+            3:  'SQUARE', #X Button
+            4:  'TRIANGLE', #Y Button
+            6:  'L1', #Left Bumper
+            7:  'R1', #Right Bumper
             11: 'START', #Hamburger Button
             12: 'HOME', #XBOX Button
             13: 'LASB', #Left Analog Stick button
@@ -222,24 +172,24 @@ class Steam(Gamepad):
     def __init__(self, joystickNumber = 0):
         Gamepad.__init__(self, joystickNumber)
         self.axisNames = {
-            0: 'AS -X', #Analog Stick Left/Right
-            1: 'AS -Y', #Analog Stick Up/Down
+            0: 'RIGHT-Y', #Analog Stick Left/Right
+            1: 'LEFT-Y', #Analog Stick Up/Down
             2: 'RTP -X', #Right Track Pad Left/Right
             3: 'RTP -Y', #Right Track Pad Up/Down
             4: 'LTP -Y', #Left Track Pad Up/Down
             5: 'LTP -X', #Left Track Pad Left/Right
-            6: 'RTA', #Right Trigger Axis
-            7: 'LTA' #Left Trigger Axis
+            6: 'R2', #Right Trigger Axis
+            7: 'L2' #Left Trigger Axis
         }
         self.buttonNames = {
             0:  'LPTBUTTON', #Left TrackPad button
             1:  'RTPBUTTON', #Right TrackPad button
-            2:  'A', #A Button
-            3:  'B', #B Button
-            4:  'X', #X Button
-            5:  'Y', #Y Button
-            6:  'LB', #Left Bumper
-            7:  'RB', #Right Bumper
+            2:  'CROSS', #A Button
+            3:  'CIRCLE', #B Button
+            4:  'SQUARE', #X Button
+            5:  'TRIANGLE', #Y Button
+            6:  'L1', #Left Bumper
+            7:  'R1', #Right Bumper
             8:  'LT', #Left Trigger
             9:  'RT', #Right Trigger
             10: 'SELECT', #Select Button <
@@ -271,38 +221,16 @@ class MMP1251(Gamepad):
             7: 'DPAD-Y'
         }
         self.buttonNames = {
-            0:  'A',
-            1:  'B',
-            2:  'X',
-            3:  'Y',
-            4:  'L1',
+            0:  'CROSS', #A Button
+            1:  'CIRCLE', #B Button
+            3:  'SQUARE', #X Button
+            4:  'TRIANGLE',
             5:  'R1',
-            6:  'SELECT',
+            6:  'L1',
             7:  'START',
             8:  'HOME',
             9:  'L3',
             10: 'R3'
-        }
-        self._setupReverseMaps()
-
-class GameHat(Gamepad):
-    fullName = "WaveShare rpi GameHat "
-
-    def __init__(self, joystickNumber = 0):
-        Gamepad.__init__(self, joystickNumber)
-        self.axisNames = {
-            0: 'LEFT-X',
-            1: 'LEFT-Y'
-        }
-        self.buttonNames = {
-            0:  'A',
-            1:  'B',
-            2:  'X',
-            3:  'Y',
-            4:  'TR',
-            5:  'TL',
-            6:  'SELECT',
-            7:  'START'
         }
         self._setupReverseMaps()
 
@@ -313,21 +241,21 @@ class PG9099(Gamepad):
         Gamepad.__init__(self, joystickNumber)
         self.axisNames = {
             0: 'LAS -X', #Left Analog Stick Left/Right
-            1: 'LAS -Y', #Left Analog Stick Up/Down
+            1: 'RIGHT-Y', #Left Analog Stick Up/Down
             2: 'RAS -X', #Right Analog Stick Left/Right
-            3: 'RAS -Y', #Right Analog Stick Up/Down
-            4: 'RT', #Right Trigger
-            5: 'LT', #Left Trigger
+            3: 'LEFT-Y', #Right Analog Stick Up/Down
+            4: 'R2', #Right Trigger
+            5: 'L2', #Left Trigger
             6: 'DPAD -X', #D-Pad Left/Right
             7: 'DPAD -Y' #D-Pad Up/Down
         }
         self.buttonNames = {
-            0:  'A', #A Button
-            1:  'B', #B Button
-            3:  'X', #X Button
-            4:  'Y', #Y Button
-            6:  'LB', #Left Bumper
-            7:  'RB', #Right Bumper
+            0:  'CROSS', #A Button
+            1:  'CIRCLE', #B Button
+            3:  'SQUARE', #X Button
+            4:  'TRIANGLE', #Y Button
+            6:  'L1', #Left Bumper
+            7:  'R1', #Right Bumper
             10: 'SELECT', #Select Button
             11: 'START', #Hamburger Button
             13: 'LASB', #Left Analog Stick button

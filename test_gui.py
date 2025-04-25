@@ -1,11 +1,9 @@
 import tkinter as tk
 from tkinter import ttk
-from time import sleep
-from time import time
+from time import sleep,time
 import threading
 import controll
 import random
-#pair = spremote.MotorPair(hub, 'A','B')
 
 class MainApplication():
     speed = 0
@@ -21,6 +19,7 @@ class MainApplication():
         self.stop = False
         self.controller_init = threading.Thread(target=self.controller,daemon=True)
         self.l_speed= 0
+        self.controller_type = "PS4"
         self.create_widget()
         self.place_widget()
         self.bind_buttons()
@@ -45,7 +44,18 @@ class MainApplication():
         self.braccio_destro_avanti = tk.Button(self.root,text="▼",height=4,width=3)
         self.braccio_destro_indietro = tk.Button(self.root,text="▲",height=4,width=3)
         #connect controller?
-        self.connect = tk.Button(self.root,text="Connect Controller",command=self.controller_init.start)
+        self.connect = tk.Button(self.root,text="Connect Controller",fg="red",command=self.controller_init.start)
+        self.controller_menu = tk.Menubutton(self.root,text="Ps4",relief="raised")
+        self.controller_menu.menu = tk.Menu(self.controller_menu,tearoff=0)
+        self.controller_menu["menu"] = self.controller_menu.menu
+        self.controller_menu.menu.add_command(label="Ps3",command= lambda:self.set_controller_type("PS3"))
+        self.controller_menu.menu.add_command(label="Ps4",command= lambda:self.set_controller_type("PS4"))
+        self.controller_menu.menu.add_command(label="Xbox360",command= lambda:self.set_controller_type("Xbox360"))
+        self.controller_menu.menu.add_command(label="XboxOne",command= lambda:self.set_controller_type("XboxONE"))
+        self.controller_menu.menu.add_command(label="Steam",command= lambda:self.set_controller_type("Steam"))
+        self.controller_menu.menu.add_command(label="MMP1251",command= lambda:self.set_controller_type("MMP1251"))
+        self.controller_menu.menu.add_command(label="PG9099",command= lambda:self.set_controller_type("PG9099"))
+        # connect serial
         #telemetry labels
         self.yaw_text = tk.Label(self.root, text="YAW: ")
         self.yaw_print = tk.Label(self.root, text=0)
@@ -71,7 +81,9 @@ class MainApplication():
         self.movement_speed_scale = ttk.Scale(self.root,from_=0,to=100,length=250,value=50)
         self.velocità_braccio_sinistro = ttk.Scale(self.root,from_=100,to=0,length=200,orient=tk.VERTICAL,value=50)
         self.velocità_braccio_destro = ttk.Scale(self.root,from_=100,to=0,length=200,orient=tk.VERTICAL,value=50)
-
+        #serial begin
+        self.serial_txt = tk.Text(self.root,height=1,width=15)
+        self.serial_button = tk.Button(self.root,fg="red",text="Connect")
     def place_widget(self): # place widget
         #movement buttons
         self.forward.place(x=250,y=165,anchor=tk.S)
@@ -90,7 +102,8 @@ class MainApplication():
         self.braccio_destro_indietro.place(x=420,y=95,anchor=tk.N)
         self.braccio_sinistro_indietro.place(x=80,y=95,anchor=tk.N)
         # connect controller
-        self.connect.place(x=250,y=360,anchor=tk.CENTER)
+        self.connect.place(x=495,y=360,anchor=tk.E)
+        self.controller_menu.place(x=310,y=360,anchor=tk.E)
         #labels gyro + speed
         self.speed_text.place(x=235,y=300,anchor=tk.CENTER)
         self.yaw_text.place(x=75,y=25,anchor=tk.CENTER)
@@ -115,7 +128,9 @@ class MainApplication():
         self.roll_print.place(x=100,y=50,anchor=tk.W)
         self.pitch_print.place(x=100,y=75,anchor=tk.W)
         self.speed_print.place(x=330,y=300,anchor=tk.W)
-
+        #serial connect
+        self.serial_txt.place(x=10,y=360,anchor=tk.W)
+        self.serial_button.place(x=172,y=360,anchor=tk.W)
     def bind_buttons(self):
         #press
         #motori pair
@@ -144,6 +159,9 @@ class MainApplication():
         self.braccio_destro_avanti.bind('<ButtonRelease-1>',lambda event:self.binding.stop_motor("'D'"))
         self.braccio_destro_indietro.bind('<ButtonRelease-1>',lambda event:self.binding.stop_motor("'D'"))   
 
+    def serial_init(self):
+        pass
+    
     def get_telemetry(self):
         tstart = time()
         while True:
@@ -170,8 +188,17 @@ class MainApplication():
                 self.port_e_label.config(text=E_value)
                 self.port_f_label.config(text=F_value)
             self.speed_print.config(text=self.movement_speed)
+    
+    def set_controller_type(self,controller_type):
+        self.controller_type = controller_type # best solution i found for these
+        self.controller_menu.config(text=controller_type)
+    
     def controller(self):
-        self.pad = controll.Input()
+        self.pad = controll.Input(self.controller_type)
+        self.connect.config(text="Connected",fg="green")
+        self.controller_menu.place(x=375)
+        l_spot_turn = False
+        r_spot_turn = False
         l_running = False
         r_running = False
         c_arm = 50
@@ -181,7 +208,6 @@ class MainApplication():
         c_direction = 1
         d_direction = 1
         while True:
-            sleep(10)
             while not self.stop and self.pad.g.available():
                 speed = self.pad.input_speed()
                 pressed = self.pad.is_pressed()
@@ -200,7 +226,20 @@ class MainApplication():
                     r_running = False
                 self.speed_print.configure(text=max(speed["l2"],speed["r2"]))
                 self.movement_speed_scale.set(max(speed["l2"],speed["r2"]))
-                #high or low arm d speed
+                #spot turn controll
+                if pressed["l1"] and l_spot_turn == False:
+                    self.binding.spot_turn("sinistra")
+                    l_spot_turn = True
+                elif l_spot_turn == True and not pressed["l1"]:
+                    print("Stop giro (da sistemare)")
+                    l_spot_turn = False
+                if pressed["r1"] and r_spot_turn == False:
+                    self.binding.spot_turn("destra")
+                    r_spot_turn = True
+                elif r_spot_turn == True and not pressed["r1"]:
+                    print("Stop giro (da sistemare)")
+                    r_spot_turn = False
+                    #high or low arm d speed
                 if 0 <= d_arm <= 100:
                     if pressed["circle"] and d_arm < 100:
                         d_arm += 10
@@ -244,8 +283,7 @@ class MainApplication():
                     self.binding.stop_motor('D')
                     d_turning = False
                 sleep(0.1)
-
-
+            self.connect.config(text="reconnect",fg="black")
             print("Controller not found,waiting")
 
 class Binding():
@@ -260,7 +298,7 @@ class Binding():
     def stop_motor(self,porta):
         print("Fermato motore singolo " + str(porta))
     def spot_turn(self,direzione):
-        print("Giro sul posto")
+        print("Giro sul posto verso " + str(direzione))
         #pair.turn_on_spot(direzione)
 
 MainApplication(500,385,"NSPremote")   
