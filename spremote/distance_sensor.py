@@ -1,7 +1,5 @@
 import time
 
-from . import logger
-
 class DistanceSensor:
     ''' A distance sensor connected to a hub block. '''
     
@@ -26,11 +24,7 @@ class DistanceSensor:
         Turn all lights of the sensor off.
         '''
         
-        ret = self.hub.cmd(f'distance_sensor.clear({self.port})')
-        logger.debug(
-            f'distance_sensor.clear in DistanceSensor.lights_off returned {ret}'
-        )
-        
+        self.hub.cmd(f'distance_sensor.clear({self.port})')       
 
     def get_distance(self):
         '''
@@ -41,9 +35,6 @@ class DistanceSensor:
         '''
         
         ret = self.hub.cmd(f'distance_sensor.distance({self.port})')
-        logger.debug(
-            f'distance_sensor.distance in DistanceSensor.get_distance returned {ret}'
-        )
         
         return int(ret[-1])
 
@@ -62,8 +53,6 @@ class DistanceSensor:
         :param int intensity: Intensity of the light (0...100).
         '''
         
-        ret = self.hub.cmd(f'distance_sensor.set_pixel({self.port}, {pos // 2}, {pos % 2}, {intensity})')
-        logger.debug(
-            f'distance_sensor.set_pixel in DistanceSensor.set_pixel returned {ret}'
-        )
+        self.hub.cmd(f'distance_sensor.set_pixel({self.port}, {pos // 2}, {pos % 2}, {intensity})')
+
  

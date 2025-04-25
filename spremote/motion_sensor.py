@@ -1,4 +1,3 @@
-
 class MotionSensor:
     ''' Motion sensor integrated into a hub block. '''
         

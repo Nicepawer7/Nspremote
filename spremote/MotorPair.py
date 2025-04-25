@@ -1,6 +1,5 @@
 from time import sleep
 
-
 class MotorPair:
     ''' A motor connected to a hub block. '''
     

@@ -1,7 +1,5 @@
 import serial
 
-from . import logger
-
 class Hub:
     ''' Connection related functionality of a hub block (no sensors, buttons,
         light matrix aso.). '''
@@ -15,20 +13,15 @@ class Hub:
         '''
         
         # connect
-        logger.debug(f'Trying to connect to {port}.')
         self.connection = serial.Serial(port, 115200, timeout=0.1)
         if not self.connection.is_open:
             self.connection.open()
         
         # stop runloop by Ctrl+D (yields full control over Python interpreter)
         self.connection.write(b'\x03')
-
+        print("gay")
         # check Python interpreter's greeting message
-        greeting = self.connection.readlines()
-        logger.debug(f'Python interpreter greeting: {greeting}')
-        if greeting[-1] != b'>>> ':
-            logger.warning('Python interpreter does not show >>>.')
-        
+        self.connection.readlines()
         # prepare for device listing
         self.cmd('import device')
         self.cmd('from spike import PrimeHub')

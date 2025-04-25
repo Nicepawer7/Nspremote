@@ -1,7 +1,5 @@
 import time
 
-from . import logger
-
 class ColorSensor:
     ''' A color sensor connected to a hub block. '''
     
@@ -29,10 +27,6 @@ class ColorSensor:
         '''
         
         ret = self.hub.cmd(f'color_sensor.rgbi({self.port})')
-        logger.debug(
-            f'color_sensor.rgbi in ColorSensor.get_raw_color returned {ret}'
-        )
-        
         return tuple(int(x) for x in ret[-1][1:-1].split(','))
 
     

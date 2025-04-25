@@ -3,14 +3,12 @@ import spremote
 from time import sleep
 
 #hub = spremote.Hub('/dev/ttyACM0')
-hub = spremote.Hub('/dev/rfcomm1')
+hub = spremote.Hub('/dev/rfcomm0')
 lb = spremote.Button(hub, 'LEFT')
 rb = spremote.Button(hub, 'RIGHT')
 pair = spremote.MotorPair(hub, 'A','B')
 speed = 70#int(input())
 motion = spremote.MotionSensor(hub)
-
-
 
 root = Tk()
 def avanti(event):

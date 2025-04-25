@@ -1,7 +1,5 @@
 import time
 
-from . import logger
-
 class Motor:
     ''' A motor connected to a hub block. '''
     

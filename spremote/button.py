@@ -1,5 +1,3 @@
-from . import logger
-
 class Button:
     '''
     A button (power, bluetooth, left, right) of a hub block including button
@@ -29,10 +27,7 @@ class Button:
                           the hub's predefined colors.
         '''
         
-        ret = self.hub.cmd(f'light.color(light.{self.which}, {color})')
-        logger.debug(
-            f'light.color in Button.set_color returned {ret}'
-        )
+        self.hub.cmd(f'light.color(light.{self.which}, {color})')
         
         
     def is_down(self):

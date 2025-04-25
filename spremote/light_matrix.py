@@ -1,5 +1,3 @@
-from . import logger
-
 class LightMatrix:
     ''' The light matrix of a hub block. '''
     
@@ -20,9 +18,7 @@ class LightMatrix:
         Clear light matrix (turn all pixels off).
         '''
         
-        ret = self.hub.cmd('hub.light_matrix.clear()')
-        logger.debug(f'hub.light_matrix.clear in LightMatrix.clear returned {ret}')
-        
+        self.hub.cmd('hub.light_matrix.clear()')  
 
     def show_image(self, img):
         '''
@@ -39,11 +35,9 @@ class LightMatrix:
         
         img_list = [value_map[v] for v in img if v in value_map.keys()]
         if len(img_list) != 25:
-            logger.debug(f'Invalid image: {img}.')
             return
         
-        ret = self.hub.cmd(f'hub.light_matrix.show({str(img_list)})')
-        logger.debug(f'hub.light_matrix.show in LightMatrix.show_image returned {ret}')
+        self.hub.cmd(f'hub.light_matrix.show({str(img_list)})')
 
 
     def set_pixel(self, x, y, b):
@@ -55,6 +49,4 @@ class LightMatrix:
         :param int b: brightness level (0-100).
         '''
         
-        ret = self.hub.cmd(f'hub.light_matrix.set_pixel({x}, {y}, {b})')
-        logger.debug(f'hub.light_matrix.set_pixel in LightMatrix.set_pixel returned {ret}')
-        
+        self.hub.cmd(f'hub.light_matrix.set_pixel({x}, {y}, {b})')

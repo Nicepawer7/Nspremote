@@ -1,7 +1,5 @@
 import time
 
-from . import logger
-
 class ForceSensor:
     ''' A force sensor connected to a hub block. '''
     
@@ -28,8 +26,5 @@ class ForceSensor:
         '''
         
         ret = self.hub.cmd(f'force_sensor.raw({self.port})')
-        logger.debug(
-            f'force_sensor.raw in ForceSensor.get_raw returned {ret}'
-        )
         
         return int(ret[-1])
