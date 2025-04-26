@@ -38,14 +38,14 @@ class Input:
     def right_speed(self):
         r_speed = ((self.gamepad.axis('R2')+1)/2)*100
         if r_speed > 5:
-            return self.arduino_map(r_speed,0,100,25,100)
+            return self.arduino_map(r_speed,1,100,25,100)
         else:
             return 0      
     
     def left_speed(self):
         l_speed = ((self.gamepad.axis('L2')+1)/2)*100
         if l_speed > 5:
-            return self.arduino_map(l_speed,0,100,25,100)
+            return self.arduino_map(l_speed,1,100,25,100)
         else:
             return 0
     def input_speed(self):

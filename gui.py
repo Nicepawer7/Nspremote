@@ -192,12 +192,11 @@ class MainApplication():
         while True:
             self.movement_speed = int(self.movement_speed_scale.get())
             orientation = self.comunication.get_orientation()
-            self.yaw_print.config(text=orientation["yaw"])
-            self.roll_print.config(text=orientation["roll"])
-            self.pitch_print.config(text=orientation["pitch"])
-            if time() - tstart >= 0.1:
+            if time() - tstart >= 0.3:
                 tstart = time()
-            
+                self.yaw_print.config(text=orientation["yaw"])
+                self.roll_print.config(text=orientation["roll"])
+                self.pitch_print.config(text=orientation["pitch"])
                 self.port_a_label.config(text=0)
                 self.port_b_label.config(text=0)
                 self.port_c_label.config(text=0)
@@ -205,6 +204,8 @@ class MainApplication():
                 self.port_e_label.config(text=0)
                 self.port_f_label.config(text=0)
             self.speed_print.config(text=self.movement_speed)
+
+
     
     def set_controller_type(self,controller_type):
         self.controller_type = controller_type # best solution i found for these
@@ -224,29 +225,22 @@ class MainApplication():
         d_turning = False
         c_direction = 1
         d_direction = 1
-        previous_speed = 0
         while True:
             while not self.stop and self.pad.g.available():
                 speed = self.pad.input_speed()
                 pressed = self.pad.is_pressed()
                 if speed["l2"] > 20:
-                    if previous_speed != speed:
-                        self.comunication.gira_motore("'A'",direzione=-1,velocità=speed["l2"])
+                    self.comunication.gira_motore("'A'",direzione=-1,velocità=speed["l2"])
                     l_running = True
-                    previous_speed = speed
                 elif l_running == True and speed["l2"] < 20:
                     self.comunication.stop_motor("'A'")
                     l_running = False
-                    previous_speed = 0
                 if speed["r2"] > 20:
-                    if previous_speed != speed:
-                        self.comunication.gira_motore("'B'",velocità=speed["r2"])
+                    self.comunication.gira_motore("'B'",velocità=speed["r2"])
                     r_running = True
-                    previous_speed = speed
                 elif r_running == True and speed["r2"] < 20:
                     self.comunication.stop_motor("'B'")
                     r_running = False
-                    previous_speed = 0
 
                 self.speed_print.configure(text=max(speed["l2"],speed["r2"]))
                 self.movement_speed_scale.set(max(speed["l2"],speed["r2"]))
@@ -315,7 +309,6 @@ class MainApplication():
 class Comunication():
     def __init__(self,speed_slider,hub):
         self.hub = hub 
-        print("gay")
         self.pair = spremote.MotorPair(self.hub, 'A','B')
         self.motore = spremote.Motor(self.hub)
         self.motion = spremote.MotionSensor(self.hub)
@@ -336,7 +329,7 @@ class Comunication():
     def stop_motor(self,porta):
         self.motore.stop(porta)
         print("Fermato motore singolo " + str(porta))
-    def spot_turn(self,direzione,velocità=100):
+    def spot_turn(self,direzione,velocità=60):
         print("Giro sul posto verso " + str(direzione))
         self.pair.turn_on_spot(direzione,speed=velocità)
     def get_ports_id(self):
@@ -348,5 +341,6 @@ class Comunication():
         orientation['pitch'] = self.motion.get_pitch()
         orientation['roll'] = self.motion.get_roll()
         return orientation
-
+    def get_console_answer(self):
+        return self.hub.readlines()
 MainApplication(500,435,"NSPremote",hub)   
