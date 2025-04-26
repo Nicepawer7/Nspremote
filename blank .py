@@ -1,25 +1,21 @@
-import threading
-import time
-
-def saluta():
-    for i in range(5):
-        print("Ciao!")
-        time.sleep(1)
-
-def conta():
-    for i in range(5):
-        print(i)
-        time.sleep(1)
-
-# Avvio i thread
-t1 = threading.Thread(target=saluta)
-t2 = threading.Thread(target=conta)
-
-t1.start()
-t2.start()
-
-# Aspetto che finiscano
-t1.join()
-t2.join()
-
-print("Fatto!")
+import tkinter as tk
+ 
+window = tk.Tk()
+greeting = tk.Label(text="hello everyone \n what's up")
+greeting.pack()
+ 
+entry = tk.Entry(window)
+entry.pack()
+ 
+text_box = tk.Label()
+text_box.pack()
+ 
+ 
+def on_entry(event):
+    text_box['text'] = name = entry.get()
+    print(name)
+ 
+ 
+entry.bind('<Return>', on_entry)
+ 
+window.mainloop()

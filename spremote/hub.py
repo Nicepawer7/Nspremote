@@ -11,15 +11,17 @@ class Hub:
         :param str port: Device name of the hub at the host machine (e.g.
                          `/dev/ttyACM0`).
         '''
-        
+        print("uuuh")
         # connect
         self.connection = serial.Serial(port, 115200, timeout=0.1)
         if not self.connection.is_open:
+            print("bleh")
             self.connection.open()
-        
+
+        print("yuuuuuu")
         # stop runloop by Ctrl+D (yields full control over Python interpreter)
         self.connection.write(b'\x03')
-        print("gay")
+        print("Hub initialized")
         # check Python interpreter's greeting message
         self.connection.readlines()
         # prepare for device listing
@@ -121,9 +123,8 @@ class Hub:
         # send code
         self.write('\n'.join(lines))
         self.write('#' + marker)
-        
+        output = 0
         # wait till executed and collect outputs
-        output = []
         while True:
             line = self.readline()
             if line == '':
@@ -131,8 +132,7 @@ class Hub:
             if line.find(marker) > -1:
                 break
             if line[:3] != '>>>' and line[:3] != '...':
-                output.append(line)
-                
+                output = line
         return output
 
 
@@ -150,7 +150,11 @@ class Hub:
         '''
         
         devices = {}
-        for num, port in enumerate(['A', 'B', 'C', 'D', 'E', 'F']):
-            devices[port] = int(self.cmd(f'try:\n    print(device.id({num}))\nexcept:\n    print(0)\n')[0])
-        
+        ports = ['A','B','C','D','E','F']
+        for port in ports:
+            devices[port] = (self.cmd(f"print(hub.port.{port}.info()['type'])"))
+            if devices[port] == "None":
+                devices[port] = 0
+            else:
+                devices[port] = int(devices[port])
         return devices

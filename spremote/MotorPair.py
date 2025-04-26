@@ -32,8 +32,6 @@ class MotorPair:
         # stop and (un)lock motor
         self.lock = lock
         self.hub.cmd(f'coppia = MotorPair({self.port1},{self.port2})')
-        self.start(speed=0, acc=0)
-        self.stop()
  
 
     def start(self, speed=None, acc=None):
@@ -143,7 +141,7 @@ class MotorPair:
 
         return int(ret[-1])
     def turn_on_spot(self,direzione,speed=70):
-        
+        #add dictionary
         match direzione:
             case 1:
                 self.hub.cmd(f'coppia.start_tank_at_power({speed*-1},{speed})')
