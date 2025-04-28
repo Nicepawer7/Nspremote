@@ -1,58 +1,74 @@
-import time
-
 class DistanceSensor:
     ''' A distance sensor connected to a hub block. '''
     
     def __init__(self, hub, port):
         '''
-        Prepare hub for usage of a distance sensor.
+        Prepare hub for usage of a color sensor.
     
-        :param Hub hub: [](#Hub) object the distance sensor is connected to.
-        :param str port:  Identifier of the hub port the sensor is connected to
-                          (one of `'A'`, `'B'`, `'C'`, `'D'`, `'E'`, `'F'`).
+        :param Hub hub: [](#Hub) object the color sensor is connected to.
+        :param str port:
         '''
         
         self.hub = hub
-        port_map = {'A': 0, 'B': 1, 'C': 2, 'D': 3, 'E': 4, 'F': 5}
-        self.port = port_map[port]
-        self.hub.cmd('import distance_sensor')
-        self.lights_off()
+        self.hub.cmd('from spike import DistanceSensor')
+        self.port = "DistanceSensor('" + port + "')"
+        self.light_up_all()
         
     
-    def lights_off(self):
+    def light_up_all(self,brightness = 100):
         '''
-        Turn all lights of the sensor off.
-        '''
-        
-        self.hub.cmd(f'distance_sensor.clear({self.port})')       
+        Turn all lights of the sensor on.
+        '''     
+        self.hub.cmd(f'{self.port}.light_up_all({brightness})')       
 
-    def get_distance(self):
+    def light_up(self,right_top = 100, left_top = 100, right_bottom = 100, left_bottom = 100):
         '''
-        Read distance in millimeters.
-    
-        :return int: Distance in millimeters. -1 indicates an invalid
-                     measurement.
+        Turn single lights on
+        :right_top = 0 - 100
+        :left_top = 0 - 100
+        :right_bottom = 0 - 100
+        :lft_bottom = 0 - 100
+        '''     
+        lights = []
+        lights[0] = right_top
+        lights[1] = left_top
+        lights[2] = right_bottom
+        lights[3] = left_bottom
+        i = 0
+        while i < 4:
+            if lights[i] > 100:
+                lights[i] = 100
+            elif lights[i] < 0:
+                lights[i] = 0
+            i += 1
+        self.hub.cmd(f'{self.port}.light_up({right_top},{left_top},{right_bottom},{left_bottom})')       
+
+    def get_distance_cm(self,short_range = False):
         '''
-        
-        ret = self.hub.cmd(f'distance_sensor.distance({self.port})')
-        
-        return int(ret[-1])
+        Return distance in cm
+        :param short_range for better measurement but close range
+        :int distance
+        '''    
 
-    
-    def set_pixel(self, pos, intensity):
+        ret = self.hub.cmd(f'{self.port}.get_distance_cm(short_range = {short_range})')
+        return ret
+
+    def get_distance_inches(self,short_range = False):
         '''
-        Set intensity of a distance sensor's light.
+        Return distance in inches
+        :param short_range for better measurement but close range
+        :int distance
+        '''    
 
-        Each of the four lights is indentified by an int in 0...3:
-        * 0 is left top,
-        * 1 is left botton,
-        * 2 is right top,
-        * 3 is right bottom.
+        ret = self.hub.cmd(f'{self.port}.get_distance_inches(short_range = {short_range})')
+        return ret
 
-        :param int pos: Identifier of the light (0...3).
-        :param int intensity: Intensity of the light (0...100).
+    def get_distance_percentage(self,short_range = False):
         '''
-        
-        self.hub.cmd(f'distance_sensor.set_pixel({self.port}, {pos // 2}, {pos % 2}, {intensity})')
+        Return distance in percentage
+        :param short_range for better measurement but close range
+        :int distance 0-100
+        '''    
 
- 
+        ret = self.hub.cmd(f'{self.port}.get_distance_percentage(short_range = {short_range})')
+        return ret

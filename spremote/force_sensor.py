@@ -1,9 +1,7 @@
-import time
-
 class ForceSensor:
     ''' A force sensor connected to a hub block. '''
     
-    def __init__(self, hub, port):
+    def __init__(self,hub,port):
         '''
         Prepare hub for usage of a force sensor.
     
@@ -11,20 +9,41 @@ class ForceSensor:
         :param str port:  Identifier of the hub port the sensor is connected to
                           (one of `'A'`, `'B'`, `'C'`, `'D'`, `'E'`, `'F'`).
         '''
-        
         self.hub = hub
-        port_map = {'A': 0, 'B': 1, 'C': 2, 'D': 3, 'E': 4, 'F': 5}
-        self.port = port_map[port]
-        self.hub.cmd('import force_sensor')
+        self.hub.cmd('from spike import ForceSensor')
+        self.port = "ForceSensor('" + port + "')"
+        print(self.port)
         
-    
-    def get_raw(self):
+        
+    def is_pressed(self):
         '''
-        Read raw data.
+        get's force in newton
     
-        :return int: Force read from sensor.
+        :return int: ForNewtons read from sensor.
         '''
         
-        ret = self.hub.cmd(f'force_sensor.raw({self.port})')
+        ret = self.hub.cmd(f'{self.port}.is_pressed()')
         
-        return int(ret[-1])
+        return int(ret)
+    
+    def get_force_newton(self):
+        '''
+        get's force in newton
+    
+        :return int: ForNewtons read from sensor.
+        '''
+        
+        ret = self.hub.cmd(f'{self.port}.get_force_newton()')
+        
+        return int(ret)
+    
+    def get_force_percentage(self):
+        '''
+        get's force in newton
+    
+        :return int: ForNewtons read from sensor.
+        '''
+        
+        ret = self.hub.cmd(f'{self.port}.get_force_percentage()')
+        
+        return int(ret)

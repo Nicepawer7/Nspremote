@@ -1,6 +1,6 @@
 class Button:
     '''
-    A button (power, bluetooth, left, right) of a hub block including button
+    A button (left, right) of a hub block including button
     lights.
     '''
         
@@ -9,28 +9,31 @@ class Button:
         Prepare hub for button usage.
     
         :param Hub hub: [](#Hub) object the button belongs to.
-        'param str which: Button identifier (`'POWER'`, `'CONNECT'`, `'LEFT'`,
-                          `'RIGHT`')
+        'param str which: Button identifier (`'left'`,
+                          `'right`')
         '''
         
         self.hub = hub
         self.which = which
-        self.hub.cmd('from hub import light')
-        self.hub.cmd('from hub import button')
-        
     
     def set_color(self, color):
         '''
         Set the button light's color.
         
-        :param int color: 0 turns off the light. Values 1 to 10 select one of
+        :param int color:  Values 1 to 11 select one of
                           the hub's predefined colors.
         '''
         
-        self.hub.cmd(f'light.color(light.{self.which}, {color})')
+        self.hub.cmd(f"spike.status_light.on('{color}')")
+
+    def turn_light_off(self):
+        '''
+        Set the button light off.
+        '''
         
+        self.hub.cmd(f"spike.status_light.off()")        
         
-    def is_down(self):
+    def is_pressed(self):
         '''
         Returns number of milliseconds the button is down for.
         
@@ -38,6 +41,6 @@ class Button:
                      is returned.
         '''
         
-        ret = self.hub.cmd(f'button.pressed(button.{self.which})')
+        ret = self.hub.cmd(f'spike.{self.which}.is_pressed()')
         
-        return int(ret[-1])
+        return int(ret)

@@ -1,5 +1,3 @@
-import time
-
 class ColorSensor:
     ''' A color sensor connected to a hub block. '''
     
@@ -13,29 +11,100 @@ class ColorSensor:
         '''
         
         self.hub = hub
-        port_map = {'A': 0, 'B': 1, 'C': 2, 'D': 3, 'E': 4, 'F': 5}
-        self.port = port_map[port]
-        self.hub.cmd('import color_sensor')
+        self.hub.cmd('from spike import ColorSensor')
+        self.port = "ColorSensor('" + port + "')"
+
         
 
-    def get_raw_color(self):
-        '''
-        Read color and intensity without additional scaling.
-        
-        :return (int, int, int, int): Tuple `(R, G, B, intensity)` of ints in
-                                      0-1023.
-        '''
-        
-        ret = self.hub.cmd(f'color_sensor.rgbi({self.port})')
-        return tuple(int(x) for x in ret[-1][1:-1].split(','))
-
-    
     def get_color(self):
         '''
-        Read color and intensity and scale values to 0-255.
+        Read color
         
-        :return (int, int, int, int): Tuple `(R, G, B, intensity)` of ints in
-                                      0-255.
+        :return color
         '''
         
-        return tuple(int(x / 1024 * 255) for x in self.get_raw_color())
+        ret = self.hub.cmd(f'{self.port}.get_color()')
+        return ret
+
+    
+    def get_ambient_light(self):
+        '''
+        Read ambient light value
+        
+        :return int 0 to 100% light value
+        '''
+        ret = self.hub.cmd(f'{self.port}.get_ambient_light()')
+        return ret
+    
+    def get_reflected_light(self):
+        '''
+        Read reflected light value
+        
+        :return int 0 to 100% light value
+        '''
+        ret = self.hub.cmd(f'{self.port}.get_reflected_light()')
+        return ret 
+
+    def get_rgb_intensity(self):
+        '''
+        Read rgb intensity value
+        
+        :return tuple 0 to 1024 analog rgb value
+        '''
+        ret = self.hub.cmd(f'{self.port}.get_rgb_intensity()')
+        print(" DEVO FARE DEI TEST PER FARLO FUNZIONARE")
+        return ret 
+    
+    def get_red(self):
+        '''
+        Read red intensity value
+        
+        :return tuple 0 to 1024 analog red value
+        '''
+        ret = self.hub.cmd(f'{self.port}.get_red()')
+        print(" DEVO FARE DEI TEST PER FARLO FUNZIONARE")
+        return ret 
+    
+    def get_green(self):
+        '''
+        Read red intensity value
+        
+        :return tuple 0 to 1024 analog green value
+        '''
+        ret = self.hub.cmd(f'{self.port}.get_green())')
+        print(" DEVO FARE DEI TEST PER FARLO FUNZIONARE")
+        return ret 
+    
+    def get_blue(self):
+        '''
+        Read red intensity value
+        
+        :return tuple 0 to 1024 analog blue value
+        '''
+        ret = self.hub.cmd(f'{self.port}.get_blue()')
+        print(" DEVO FARE DEI TEST PER FARLO FUNZIONARE")
+        return ret 
+    
+    def light_up(self,light_1 = 100,light_2 = 100,light_3 = 100):
+        lights = []
+        lights[0] = light_1
+        lights[1] = light_2
+        lights[2] = light_3
+        i = 0
+        while i < 3:
+            if lights[i] > 100:
+                lights[i] = 100
+            elif lights[i] < 0:
+                lights[i] = 0
+            i += 1
+
+        self.hub.cmd(f'{self.port}.light_up({light_1},{light_2},{light_3})')
+
+    def light_up_all(self,brightness = 100):
+
+        if brightness > 100:
+            brightness = 100
+        elif brightness < 0:
+            brightness = 0
+            
+        self.hub.cmd(f'{self.port}.light_up_all({brightness})')

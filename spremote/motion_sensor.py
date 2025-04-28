@@ -16,7 +16,6 @@ class MotionSensor:
         
     
     def reset(self):
-
         self.hub.cmd(f'motion_sensor.reset_yaw_angle()')
 
     def get_angular_velocity(self):
@@ -31,7 +30,8 @@ class MotionSensor:
                                        r, p, y in degrees per second.
         '''
         
-        ret = self.hub.cmd(f'motion_sensor.angular_velocity(True)')       
+        ret = self.hub.cmd(f'motion_sensor.angular_velocity(True)')     
+        print("da testare")  
         return tuple(int(x) / 10 for x in ret[-1][1:-1].split(','))
 
 
@@ -49,7 +49,8 @@ class MotionSensor:
                                        gravitation.
         '''
         
-        ret = self.hub.cmd(f'motion_sensor.acceleration(True)')        
+        ret = self.hub.cmd(f'motion_sensor.acceleration(True)') 
+        print("da testare")       
         return tuple(int(x) / 1000 for x in ret[-1][1:-1].split(','))
     
     def get_yaw(self):
