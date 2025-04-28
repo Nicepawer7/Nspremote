@@ -1,6 +1,7 @@
 import tkinter as tk
 from tkinter import ttk
 from time import time
+from time import sleep
 import threading
 import controll
 import random
@@ -191,12 +192,12 @@ class MainApplication():
         self.port_f_text.config(text=f'{devices[id['F']]} F: ')
         while True:
             self.movement_speed = int(self.movement_speed_scale.get())
-            orientation = self.comunication.get_orientation()
             if time() - tstart >= 0.3:
                 tstart = time()
+                """orientation = self.comunication.get_orientation()
                 self.yaw_print.config(text=orientation["yaw"])
                 self.roll_print.config(text=orientation["roll"])
-                self.pitch_print.config(text=orientation["pitch"])
+                self.pitch_print.config(text=orientation["pitch"])"""
                 self.port_a_label.config(text=0)
                 self.port_b_label.config(text=0)
                 self.port_c_label.config(text=0)
@@ -265,7 +266,7 @@ class MainApplication():
                         d_arm -= 10
                     self.velocità_braccio_destro.set(d_arm)
                     if d_turning:
-                        self.comunication.gira_motore("'D'",direzione=c_direction,velocità=d_arm)
+                        self.comunication.gira_motore("'D'",direzione=d_direction,velocità=d_arm)
                 # c arm speed
                 if 0 <= c_arm <= 100:                  
                     if pressed["triangle"] and c_arm < 100:
@@ -274,7 +275,7 @@ class MainApplication():
                         c_arm -= 10
                     self.velocità_braccio_sinistro.set(c_arm)
                     if c_turning:
-                        self.comunication.gira_motore("'C'",direzione=d_direction,velocità=c_arm)
+                        self.comunication.gira_motore("'C'",direzione=c_direction,velocità=c_arm)
                 # check fors tick movement to move arm
                 if speed["l3y"] > 30 and not c_turning:
                     self.comunication.gira_motore("'C'",direzione=1,velocità=c_arm)
@@ -338,7 +339,9 @@ class Comunication():
     def get_orientation(self):
         orientation = {}
         orientation['yaw'] = self.motion.get_yaw()
+        sleep(0.1)
         orientation['pitch'] = self.motion.get_pitch()
+        sleep(0.1)
         orientation['roll'] = self.motion.get_roll()
         return orientation
     def get_console_answer(self):
