@@ -1,5 +1,5 @@
 # Nspremote
-This repository represent my development of a spike 2 controll app, the app is based on (Spremote project on github)[https://github.com/jeflem/spremote]
+This repository represent my development of a spike 2 controll app, the app is based on [Spremote project on github](https://github.com/jeflem/spremote)
 ## TODO:
 - [ ] Controllare per riconnessione pad
 - [X] aggiungere barra con scelta pad (sarebbe bello testarli)
