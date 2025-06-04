@@ -1,6 +1,6 @@
 # Nspremote
 <p align="center">
-  <img width="460" height="300" src="Nspremote.png">
+  <img src="Nspremote.png">
 </p>
 This repository is still under (slow) active development; this is my first public repository meant to be used by someone else, so please be patient, the code is buggy and made off mixed Italian and English comment, for any problem or info don't esitate to contact me or my team at **nevegome@gmail.com**
 ## The project
