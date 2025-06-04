@@ -10,9 +10,9 @@ This repository represent my development of a spike 2 controll app, the app is f
 The desktop app is written in python using the Tkinter framework for the graphical interface, while the Nspremote and serial library (once finished will become a separate repository) are used to handle the Computer-Brick bluetooth comunication (wired connection is also avaible)
 ## Usage
 The App requires python (aggiungere versione) and the serial library, moreover Gamepad controll is supported through the Gamepad library (only dualshock 4 has been tested), eventough compatibility should be avaible for Linux, Windows and Mac; at the moment the App is working only on Linux, Windows should work by matching the serial port and Mac has not been tested at the moment.
-The working App gui is contained in the gui.py file.that can be run from visual studio code or by running python gui.py after connecting the spike brick, to identify the serial port the comand 
-"""sudo dmesg | grep rfcomm""" for bluetooth connection
-"""sudo dmesg | grep tty""" for wired connection
+The working App gui is contained in the gui.py file.that can be run from visual studio code or by running python gui.py after connecting the spike brick, to identify the serial port the command: 
+`sudo dmesg | grep rfcomm` for bluetooth connection
+`sudo dmesg | grep tty` for wired connection
 [more info here](https://libdoc.fh-zwickau.de/opus4/frontdoor/deliver/index/docId/15400/file/lego_spike_linux.pdf)
 Once turned on the brick and connected wait some time otherwise it might freeze (working on it)
 Motors *A* and *B* are used as movement motors, this can be changed in gui.py file right at the begin, the same for arms motors.
